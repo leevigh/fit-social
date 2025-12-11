@@ -1,0 +1,17 @@
+[package]
+name = "fit_social"
+version = "1.0.0"
+authors = []
+
+[addresses]
+fit_social = "_"
+
+[dev-addresses]
+fit_social = "0x2"
+
+[dependencies.AptosFramework]
+git = "https://github.com/movementlabsxyz/aptos-core.git"
+rev = "movement"
+subdir = "aptos-move/framework/aptos-framework"
+
+[dev-dependencies]
