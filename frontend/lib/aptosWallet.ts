@@ -1,7 +1,6 @@
 // lib/aptosWallet.ts - Helper utilities for Aptos wallet integration with Privy
 import { AptosAccount, TxnBuilderTypes, BCS } from 'aptos';
 import { Types } from 'aptos';
-import type { WalletClient } from '@privy-io/react-auth';
 
 /**
  * Convert Privy wallet to Aptos account
@@ -9,7 +8,7 @@ import type { WalletClient } from '@privy-io/react-auth';
  * In production, you may want to use a dedicated Aptos wallet adapter
  */
 export async function getAptosAccountFromPrivyWallet(
-  wallet: WalletClient
+  wallet: any
 ): Promise<AptosAccount | null> {
   try {
     // Privy wallets don't natively support Aptos, so we need an alternative approach
@@ -36,8 +35,9 @@ export async function signAptosTransaction(
 ): Promise<Uint8Array> {
   if (signer instanceof AptosAccount) {
     // Use AptosAccount's built-in signing
-    const rawTxn = await transactionToRawTransaction(transaction);
-    return signer.signBuffer(rawTxn);
+    // Note: This is a placeholder - proper implementation would require
+    // serializing the transaction payload to bytes first
+    throw new Error('AptosAccount signing not fully implemented. Use a wallet adapter instead.');
   } else {
     // Use custom signer function
     return signer(transaction);
@@ -46,6 +46,7 @@ export async function signAptosTransaction(
 
 /**
  * Helper to convert transaction payload to raw transaction bytes
+ * @deprecated Not fully implemented - use Aptos wallet adapter instead
  */
 async function transactionToRawTransaction(
   payload: Types.TransactionPayload
