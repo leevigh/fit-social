@@ -1,8 +1,16 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Add empty turbopack config to silence the warning
-  turbopack: {},
+  // Exclude problematic packages from server-side bundling
+  serverExternalPackages: [
+    'tap',
+    'tape',
+    'why-is-node-running',
+    'thread-stream',
+  ],
+  
+  // Note: We're using webpack via --webpack flag in build script
+  // Turbopack configuration is not needed when using webpack
   
   webpack: (config, { isServer }) => {
     // Ignore test files and dev dependencies that shouldn't be bundled
@@ -16,6 +24,29 @@ const nextConfig: NextConfig = {
       }),
       new webpack.IgnorePlugin({
         resourceRegExp: /^(tap|tape|why-is-node-running)$/,
+      }),
+      // Ignore LICENSE files and other non-code files in node_modules
+      new webpack.IgnorePlugin({
+        resourceRegExp: /\/LICENSE$/,
+        contextRegExp: /node_modules/,
+      }),
+      // Ignore test files more broadly in node_modules
+      new webpack.IgnorePlugin({
+        resourceRegExp: /\.test\.(js|ts|tsx|jsx)$/,
+        contextRegExp: /node_modules/,
+      }),
+      new webpack.IgnorePlugin({
+        resourceRegExp: /\.spec\.(js|ts|tsx|jsx)$/,
+        contextRegExp: /node_modules/,
+      }),
+      // Ignore test directories in node_modules
+      new webpack.IgnorePlugin({
+        resourceRegExp: /\/test\//,
+        contextRegExp: /node_modules/,
+      }),
+      new webpack.IgnorePlugin({
+        resourceRegExp: /\/tests\//,
+        contextRegExp: /node_modules/,
       })
     );
 
