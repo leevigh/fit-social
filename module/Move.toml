@@ -4,7 +4,7 @@ version = "1.0.0"
 authors = []
 
 [addresses]
-fit_social = "_"
+fit_social = "0x4a1f3e19101055663fc0817ddc6b2dfca28744cdae8203b8ed3da875b07b23c8"
 
 [dev-addresses]
 fit_social = "0x2"
