@@ -12,14 +12,39 @@ import {
   X,
   Star,
   Flame,
+  Plus,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { AuthButton } from "@/components/auth-button";
 import { useState } from "react";
+import { CreateChallengeDialog } from "@/components/create-challenge-dialog";
+import { useMovementAuth } from "@/hooks/useMovementAuth";
+import { useCreateChallenge } from "@/hooks/useChallenges";
 
 export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [createDialogOpen, setCreateDialogOpen] = useState(false);
+
+  const { authenticated, movementAccount } = useMovementAuth();
+  const createChallenge = useCreateChallenge();
+
+  async function handleCreateChallenge() {
+    console.log("Movement account:", movementAccount);
+    if (!movementAccount) {
+      alert("Please sign in first");
+      return;
+    }
+
+    // Now you can use movementAccount to sign transactions!
+    await createChallenge.mutateAsync({
+      name: "Test Challenge",
+      description: "My first challenge",
+      entryFee: 5,
+      durationDays: 7,
+      account: movementAccount,
+    });
+  }
 
   const challenges = [
     {
@@ -123,6 +148,24 @@ export default function Home() {
           )}
         </div>
       </nav>
+
+      {/* Floating Action Button for mobile */}
+      {authenticated && (
+        <button
+          onClick={() => setCreateDialogOpen(true)}
+          className="fixed bottom-6 right-6 md:hidden w-14 h-14 bg-gradient-to-br from-secondary to-secondary/80 hover:shadow-lg transition-all text-white rounded-full flex items-center justify-center shadow-lg z-40 active:scale-95"
+          aria-label="Create challenge"
+        >
+          <Plus className="w-6 h-6" />
+        </button>
+      )}
+
+      {/* Create Challenge Dialog */}
+      <CreateChallengeDialog
+        isOpen={createDialogOpen}
+        onClose={() => setCreateDialogOpen(false)}
+        handleSubmit={handleCreateChallenge}
+      />
 
       {/* Hero Section */}
       <section className="relative py-16 md:py-24 overflow-hidden">
